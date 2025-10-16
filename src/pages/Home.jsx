@@ -11,14 +11,13 @@ import {
 import BlogCard from "../pages/BlogCard";
 
 const Home = () => {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+   console.log("API_BASE_URL:", API_BASE_URL);
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
-
-  // Fetch blogs when component loads
   useEffect(() => {
     fetchBlogs();
   }, []);
@@ -28,22 +27,20 @@ const Home = () => {
       setLoading(true);
       setError("");
       
-      const res = await fetch(`${API_BASE_URL}/blogs`);
+      // ✅ Add /api to the URL
+      const res = await fetch(`${API_BASE_URL}/api/blogs`);
       
-
+      console.log("Fetching from:", `${API_BASE_URL}/api/blogs`);
       
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       
       const result = await res.json();
-      
-      console.log("Full API Response:", result);
+      console.log("API Response:", result);
       
       if (result.success) {
-        // Ensure we have an array and handle potential undefined data
         const blogsData = result.data || [];
-        console.log("Blogs data:", blogsData);
         setBlogs(blogsData);
       } else {
         setError(result.message || "Failed to fetch blogs");
@@ -51,19 +48,15 @@ const Home = () => {
       }
     } catch (err) {
       console.error("Error fetching blogs:", err);
-      setError("Failed to load blogs. Please try again later.");
+      setError(`Failed to load blogs: ${err.message}`);
       setBlogs([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle blog deletion
   const handleBlogDelete = (deletedBlogId) => {
-    // Remove the deleted blog from state
     setBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== deletedBlogId));
-    
-    // Show success message
     setSnackbar({
       open: true,
       message: "Blog deleted successfully!",
@@ -97,6 +90,13 @@ const Home = () => {
         Latest Blogs
       </Typography>
       
+      {/* Debug Info - Remove after testing */}
+      <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+        <Typography variant="body2" color="text.secondary">
+          API URL: {API_BASE_URL}/api/blogs | Blogs loaded: {blogs.length}
+        </Typography>
+      </Box>
+      
       {blogs.length === 0 ? (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
@@ -113,14 +113,13 @@ const Home = () => {
                 content={blog.content || "No content available"}
                 createdAt={blog.createdAt || new Date()}
                 _id={blog._id}
-                onDelete={handleBlogDelete} // Pass delete handler
+                onDelete={handleBlogDelete}
               />
             </Grid>
           ))}
         </Grid>
       )}
 
-      {/* Success/Error Snackbar */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}

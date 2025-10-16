@@ -11,10 +11,12 @@ import {
 } from "@mui/material";
 
 const CreateBlog = () => {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+  
   const [formData, setFormData] = useState({
     title: "",
-    author: "", // Add author field
-    content: "", // Change description to content
+    author: "",
+    content: "",
   });
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +33,8 @@ const CreateBlog = () => {
 
     if (!formData.author.trim()) {
       newErrors.author = "Author name is required";
+    } else if (formData.author.length > 100) {
+      newErrors.author = "Author name must be less than 100 characters";
     }
 
     if (!formData.content.trim()) {
@@ -74,7 +78,8 @@ const CreateBlog = () => {
     setMessage("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/blogs", {
+      // ✅ Use the correct API URL with /api prefix
+      const res = await fetch(`${API_BASE_URL}/api/blogs`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -82,18 +87,23 @@ const CreateBlog = () => {
         },
         body: JSON.stringify({
           title: formData.title.trim(),
-          author: formData.author.trim(), // Add author
-          content: formData.content.trim(), // Change to content
+          author: formData.author.trim(),
+          content: formData.content.trim(),
         }),
       });
+
+      console.log("Create Blog - Response status:", res.status);
+      console.log("Create Blog - API URL:", `${API_BASE_URL}/api/blogs`);
 
       const contentType = res.headers.get("content-type");
       let data;
 
       if (contentType && contentType.includes("application/json")) {
         data = await res.json();
+        console.log("Create Blog - Response data:", data);
       } else {
         const text = await res.text();
+        console.log("Create Blog - Non-JSON response:", text);
         throw new Error(`Server returned ${res.status}: ${text.substring(0, 100)}`);
       }
 
@@ -105,6 +115,11 @@ const CreateBlog = () => {
           content: "",
         });
         setErrors({});
+        
+        // Optional: Redirect to home page or show success message
+        setTimeout(() => {
+          setMessage(""); // Clear message after 3 seconds
+        }, 3000);
       } else {
         setMessage(data.message || `Error: ${res.status} ${res.statusText}`);
       }
@@ -139,6 +154,13 @@ const CreateBlog = () => {
           Write a New Blog
         </Typography>
 
+        {/* Debug Info - Remove after testing */}
+        <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            API URL: {API_BASE_URL}/api/blogs
+          </Typography>
+        </Box>
+
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <TextField
             label="Blog Title"
@@ -147,10 +169,13 @@ const CreateBlog = () => {
             value={formData.title}
             onChange={handleChange}
             error={!!errors.title}
-            helperText={errors.title}
+            helperText={errors.title || `${formData.title.length}/200 characters`}
             disabled={isLoading}
             sx={{ mb: 3 }}
             required
+            inputProps={{
+              maxLength: 200
+            }}
           />
 
           <TextField
@@ -160,10 +185,13 @@ const CreateBlog = () => {
             value={formData.author}
             onChange={handleChange}
             error={!!errors.author}
-            helperText={errors.author}
+            helperText={errors.author || `${formData.author.length}/100 characters`}
             disabled={isLoading}
             sx={{ mb: 3 }}
             required
+            inputProps={{
+              maxLength: 100
+            }}
           />
 
           <TextField
@@ -175,10 +203,13 @@ const CreateBlog = () => {
             value={formData.content}
             onChange={handleChange}
             error={!!errors.content}
-            helperText={errors.content || "Write your blog content here..."}
+            helperText={errors.content || `Minimum 10 characters (${formData.content.length} entered)`}
             disabled={isLoading}
             sx={{ mb: 3 }}
             required
+            inputProps={{
+              minLength: 10
+            }}
           />
 
           <Box sx={{ position: "relative" }}>
