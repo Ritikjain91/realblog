@@ -155,11 +155,11 @@ const CreateBlog = () => {
         </Typography>
 
         {/* Debug Info - Remove after testing */}
-        <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+        {/* <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
           <Typography variant="body2" color="text.secondary">
             API URL: {API_BASE_URL}/api/blogs
           </Typography>
-        </Box>
+        </Box> */}
 
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <TextField

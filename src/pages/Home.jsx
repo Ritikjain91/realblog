@@ -91,12 +91,12 @@ const Home = () => {
       </Typography>
       
       {/* Debug Info - Remove after testing */}
-      <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+      {/* <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
         <Typography variant="body2" color="text.secondary">
           API URL: {API_BASE_URL}/api/blogs | Blogs loaded: {blogs.length}
         </Typography>
       </Box>
-      
+       */}
       {blogs.length === 0 ? (
         <Box sx={{ textAlign: 'center', mt: 4 }}>
           <Typography variant="h6" color="text.secondary">
