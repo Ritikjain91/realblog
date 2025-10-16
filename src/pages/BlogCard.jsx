@@ -26,11 +26,10 @@ const BlogCard = ({
   _id,
   onDelete
 }) => {
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL ;
-  console.log("API_BASE_URL:", API_BASE_URL);
-
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
   
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [readMoreDialogOpen, setReadMoreDialogOpen] = React.useState(false); // New state for Read More
   const [loading, setLoading] = React.useState(false);
   const [snackbar, setSnackbar] = React.useState({ 
     open: false, 
@@ -59,6 +58,15 @@ const BlogCard = ({
     }
   };
 
+  // Handle Read More click
+  const handleReadMoreClick = () => {
+    setReadMoreDialogOpen(true);
+  };
+
+  const handleReadMoreClose = () => {
+    setReadMoreDialogOpen(false);
+  };
+
   const handleDeleteClick = () => {
     setDeleteDialogOpen(true);
   };
@@ -68,12 +76,8 @@ const BlogCard = ({
     try {
       const res = await fetch(`${API_BASE_URL}/api/blogs/${_id}`, {
         method: "DELETE",
-        headers: {
-          'Content-Type': 'application/json',
-        }
       });
 
-      // Check if response is OK before parsing JSON
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
@@ -81,14 +85,12 @@ const BlogCard = ({
       const result = await res.json();
 
       if (result.success) {
-        // Show success message
         setSnackbar({
           open: true,
           message: "Blog deleted successfully!",
           severity: "success"
         });
         
-        // Call the onDelete callback to update the parent component
         if (onDelete) {
           onDelete(_id);
         }
@@ -190,11 +192,62 @@ const BlogCard = ({
             color="primary" 
             variant="outlined"
             sx={{ fontWeight: 600 }}
+            onClick={handleReadMoreClick} // Add click handler
           >
             Read More
           </Button>
         </CardActions>
       </Card>
+
+      {/* Read More Dialog */}
+      <Dialog
+        open={readMoreDialogOpen}
+        onClose={handleReadMoreClose}
+        aria-labelledby="read-more-dialog-title"
+        maxWidth="md"
+        fullWidth
+        sx={{
+          '& .MuiDialog-paper': {
+            minHeight: '60vh'
+          }
+        }}
+      >
+        <DialogTitle id="read-more-dialog-title" sx={{ 
+          pb: 1,
+          borderBottom: '1px solid',
+          borderColor: 'divider'
+        }}>
+          <Typography variant="h5" component="h2" fontWeight="600">
+            {title}
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 1 }}>
+            By {author} • {formatDate(createdAt)}
+          </Typography>
+        </DialogTitle>
+        
+        <DialogContent sx={{ pt: 3 }}>
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              whiteSpace: 'pre-wrap',
+              lineHeight: 1.6,
+              fontSize: '1.1rem'
+            }}
+          >
+            {safeContent}
+          </Typography>
+        </DialogContent>
+        
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button 
+            onClick={handleReadMoreClose} 
+            color="primary"
+            variant="contained"
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog
