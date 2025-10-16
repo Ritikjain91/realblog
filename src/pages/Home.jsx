@@ -15,6 +15,8 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+
 
   // Fetch blogs when component loads
   useEffect(() => {
@@ -26,7 +28,9 @@ const Home = () => {
       setLoading(true);
       setError("");
       
-      const res = await fetch("http://localhost:5000/api/blogs");
+      const res = await fetch(`${API_BASE_URL}/blogs`);
+      
+
       
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
