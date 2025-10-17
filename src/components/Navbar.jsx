@@ -74,7 +74,7 @@ const Navbar = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Drawer for mobile */}
+  
       <Drawer
         anchor="right"
         open={open}

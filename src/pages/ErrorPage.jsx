@@ -1,10 +1,10 @@
 import { Container } from '@mui/material'
-import React from 'react'
+
 
 const ErrorPage = () => {
   return (
     <Container>
-      <h1>Error Page</h1>
+      <h1>Page is under developed </h1>
     </Container>
   )
 }
