@@ -24,11 +24,11 @@ const BlogCard = ({
   content = "No content available", 
   createdAt, 
   _id,
-  onDelete
+
 }) => {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
   
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  
   const [readMoreDialogOpen, setReadMoreDialogOpen] = React.useState(false); // New state for Read More
   const [loading, setLoading] = React.useState(false);
   const [snackbar, setSnackbar] = React.useState({ 
@@ -136,26 +136,7 @@ const BlogCard = ({
         }
       }}>
         {/* Delete Button */}
-        <Box sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1 }}>
-          <IconButton 
-            size="small" 
-            color="error" 
-            onClick={handleDeleteClick}
-            aria-label="delete blog"
-            disabled={loading}
-            sx={{
-              backgroundColor: 'background.paper',
-              '&:hover': {
-                backgroundColor: 'error.light',
-                '& .MuiSvgIcon-root': {
-                  color: 'white'
-                }
-              }
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Box>
+     
 
         <CardContent sx={{ flexGrow: 1, pt: 4 }}>
           <Typography 
