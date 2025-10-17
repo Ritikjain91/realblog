@@ -55,14 +55,7 @@ const Home = () => {
     }
   };
 
-  const handleBlogDelete = (deletedBlogId) => {
-    setBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== deletedBlogId));
-    setSnackbar({
-      open: true,
-      message: "Blog deleted successfully!",
-      severity: "success"
-    });
-  };
+  
 
   const handleCloseSnackbar = () => {
     setSnackbar(prev => ({ ...prev, open: false }));

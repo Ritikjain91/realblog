@@ -16,7 +16,6 @@ import {
   Alert,
   CircularProgress
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 const BlogCard = ({ 
   title = "No Title", 
@@ -30,7 +29,7 @@ const BlogCard = ({
   
   
   const [readMoreDialogOpen, setReadMoreDialogOpen] = React.useState(false); // New state for Read More
-  const [loading, setLoading] = React.useState(false);
+ 
   const [snackbar, setSnackbar] = React.useState({ 
     open: false, 
     message: "", 
@@ -67,57 +66,8 @@ const BlogCard = ({
     setReadMoreDialogOpen(false);
   };
 
-  const handleDeleteClick = () => {
-    setDeleteDialogOpen(true);
-  };
-
-  const handleDeleteConfirm = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/blogs/${_id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-
-      const result = await res.json();
-
-      if (result.success) {
-        setSnackbar({
-          open: true,
-          message: "Blog deleted successfully!",
-          severity: "success"
-        });
-        
-        if (onDelete) {
-          onDelete(_id);
-        }
-      } else {
-        setSnackbar({
-          open: true,
-          message: result.message || "Failed to delete blog",
-          severity: "error"
-        });
-      }
-    } catch (error) {
-      console.error("Error deleting blog:", error);
-      setSnackbar({
-        open: true,
-        message: "Network error. Please try again.",
-        severity: "error"
-      });
-    } finally {
-      setLoading(false);
-      setDeleteDialogOpen(false);
-    }
-  };
-
-  const handleDeleteCancel = () => {
-    setDeleteDialogOpen(false);
-  };
-
+  
+  
   const handleCloseSnackbar = () => {
     setSnackbar(prev => ({ ...prev, open: false }));
   };
@@ -230,45 +180,7 @@ const BlogCard = ({
         </DialogActions>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={loading ? undefined : handleDeleteCancel}
-        aria-labelledby="delete-dialog-title"
-        aria-describedby="delete-dialog-description"
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle id="delete-dialog-title" sx={{ pb: 1 }}>
-          Confirm Deletion
-        </DialogTitle>
-        <DialogContent sx={{ pb: 1 }}>
-          <DialogContentText id="delete-dialog-description">
-            Are you sure you want to delete the blog post "<strong>{title}</strong>"? 
-            This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button 
-            onClick={handleDeleteCancel} 
-            color="primary"
-            disabled={loading}
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={handleDeleteConfirm} 
-            color="error" 
-            variant="contained" 
-            disabled={loading}
-            startIcon={loading ? <CircularProgress size={16} color="inherit" /> : null}
-          >
-            {loading ? "Deleting..." : "Delete"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Snackbar for notifications */}
+     
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
