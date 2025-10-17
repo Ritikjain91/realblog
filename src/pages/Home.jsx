@@ -113,7 +113,7 @@ const Home = () => {
                 content={blog.content || "No content available"}
                 createdAt={blog.createdAt || new Date()}
                 _id={blog._id}
-                onDelete={handleBlogDelete}
+              
               />
             </Grid>
           ))}
