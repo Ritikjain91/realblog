@@ -5,16 +5,16 @@ import {
   Typography, 
   CardActions, 
   Button,
-  IconButton,
+
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
+  
   DialogActions,
-  Box,
+
   Snackbar,
   Alert,
-  CircularProgress
+
 } from "@mui/material";
 
 const BlogCard = ({ 
@@ -25,7 +25,6 @@ const BlogCard = ({
   _id,
 
 }) => {
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
   
   
   const [readMoreDialogOpen, setReadMoreDialogOpen] = React.useState(false); // New state for Read More

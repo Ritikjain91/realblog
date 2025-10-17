@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   Container,
   TextField,
@@ -149,7 +149,7 @@ const CreateBlog = () => {
           gutterBottom
           fontWeight={600}
           align="center"
-          color="primary"
+          color="black"
         >
           Write a New Blog
         </Typography>
